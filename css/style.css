@@ -1,0 +1,136 @@
+
+body{
+/*   background-image: url("http://lorempixel.com/400/300"); */
+/*   background-image: url("http://eskipaper.com/images/space-1.jpg"); */
+/*   background-image: url("http://cdn.wonderfulengineering.com/wp-content/uploads/2014/04/space-wallpaper-10.jpg"); */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background: black;
+}
+.title{
+  max-width:640px;
+/*   background-color:black; */
+   background: radial-gradient(circle, white, black);
+  color:black;
+  margin:5px auto;
+  text-align:center;
+  border:2px solid black;
+  border-radius:25%;
+}
+
+.center{
+  position: relative;
+/*   background-color:black; */
+/*   background: radial-gradient(circle, gray, black); */
+  margin:20px auto;
+  width:520px;
+  height:570px;
+  border:2px solid black;
+  border-radius:50%;
+}
+
+.yellow{
+  position: absolute;
+/*   background:rgba(255, 255, 0, 0.77); */
+  top:0;
+  right:0;
+  height:250px;
+  width:250px;
+  border-top-right-radius: 100%;
+  border-bottom-left-radius:25%;
+}
+.red{
+  position: absolute;
+/*   background:rgba(255, 5, 9, 0.59); */
+  top:0;
+  left:0;
+  height:250px;
+  width:250px;
+  border-top-left-radius: 100%;
+  border-bottom-right-radius: 25%;
+  
+}
+.blue{
+  position: absolute;
+/*   background:rgba(0, 0, 255, 0.76); */
+  bottom:0;
+  left:0;
+  height:250px;
+  width:250px;
+  border-bottom-left-radius: 100%;
+  border-top-right-radius: 25%;
+}
+.green{
+  position: absolute;
+/*   background:rgba(17, 255, 5, 0.59); */
+  bottom:0;
+  right:0;
+  height:250px;
+  width:250px;
+  border-bottom-right-radius: 100%;
+  border-top-left-radius:25%;
+}
+
+.control-pannel{
+  position: absolute;
+  top: 45%;
+  left:20px;
+  height: 60px;
+  width: 340px;
+}
+
+.on {
+  border: 3px solid black;
+  background:red;
+  display: inline-block;
+  border-radius: 100%;
+  height:20px;
+  width:20px;
+}
+
+.off{
+  border: 3px solid black;
+  background:black;
+  display: inline-block;
+  border-radius: 100%;
+  height:20px;
+  width:20px;
+}
+
+.display-screen{
+  position: absolute;
+  background:black;
+  color:white;
+  text-align: center;
+  width:100px;
+  height:100px;
+  left: 270px;
+  bottom:-4px;
+  border-radius:25%;
+  border:2px solid gray;
+}
+
+.push-down{
+  margin-top:10px;
+}
+
+
+.glyphicon-flash{
+  font-size:200px;
+  color:yellow;
+}
+
+.glyphicon-leaf{
+  font-size:200px;
+  color:green;
+}
+
+.glyphicon-fire{
+  font-size:200px;
+  color:red;
+}
+
+.glyphicon-cloud{
+  font-size:200px;
+  color:blue;
+}
