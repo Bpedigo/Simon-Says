@@ -24,4 +24,4 @@ User Story: I can win the game by getting a series of 20 steps correct. I am not
 
 A Pen created at CodePen.io. You can find this one at http://codepen.io/bpedigo/pen/eZrRNR.
 
- 
+ I have also created a git hub page that can be fownd at http://bpedigo.github.io/Simon-Says/
