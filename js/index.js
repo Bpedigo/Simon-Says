@@ -1,257 +1,239 @@
-var buttons = ["red", "yellow", "blue", "green"];
-var on = false;
-var pTurn = false;
-var sOn = false;
-var arr = [];
-arr[0] = [];
-arr[1] = [];
-var click = 0;
-var level = 1;
-var sound1 = "https://s3.amazonaws.com/freecodecamp/simonSound1.mp3";
-var sound2 = "https://s3.amazonaws.com/freecodecamp/simonSound2.mp3";
-var sound3 = "https://s3.amazonaws.com/freecodecamp/simonSound3.mp3";
-var sound4 = "https://s3.amazonaws.com/freecodecamp/simonSound4.mp3";
-var correct = "http://adrianpayne.me/game/assets/sounds/gem.mp3";
-var fail = "http://adrianpayne.me/game/assets/sounds/pop2.mp3";
+class SimonGame {
+    constructor() {
+        this.colors = ['green', 'red', 'yellow', 'blue'];
+        this.sounds = {
+            green: 'sounds/simonSound1.mp3',
+            red: 'sounds/simonSound2.mp3',
+            yellow: 'sounds/simonSound3.mp3',
+            blue: 'sounds/simonSound4.mp3',
+            correct: 'sounds/correct.mp3',
+            fail: 'sounds/fail.mp3'
+        };
+        
+        this.state = {
+            isPlaying: false,
+            isStrict: false,
+            level: 0,
+            score: 0,
+            sequence: [],
+            playerSequence: [],
+            currentStep: 0
+        };
 
-function setCode() {
-  for (var i = 0; i < 20; i++) {
-    arr[0].push(Math.round(Math.random() * 3));
+        this.achievements = {
+            level10: false
+        };
 
-  }
-}
-
-function getLevel() {
-  return level;
-}
-
-function setLevel(mLevel) {
-  level = mLevel;
-}
-
-function nextLevel() {
-  level += 1;
-  PlaySound(correct);
-}
-
-function incClick() {
-  click += 1;
-}
-
-function setClick(number) {
-  click = number;
-}
-
-function getClick() {
-  return click;
-}
-
-function resetCode() {
-  arr[0] = [];
-  arr[1] = [];
-  setLevel(1);
-  setClick(0);
-  setCode();
-  aiMove();
-}
-
-function PlaySound(path) {
-  var audioElement = document.createElement('audio');
-  audioElement.setAttribute('src', path);
-  audioElement.play();
-}
-
-function blink(bSpeed, bTimes, div) {
-
-  for (var i = 0; i < bTimes; i++) {
-    div.fadeOut(bSpeed).fadeIn(bSpeed);
-  }
-
-  if (div[0] == $(".red")[0]) {
-
-    arr[1].push(0);
-    PlaySound(sound1);
-
-  } else if (div[0] == $(".yellow")[0]) {
-
-    arr[1].push(1);
-    PlaySound(sound2);
-
-  } else if (div[0] == $(".blue")[0]) {
-
-    arr[1].push(2);
-    PlaySound(sound3);
-
-  } else if (div[0] == $(".green")[0]) {
-
-    arr[1].push(3);
-    PlaySound(sound4);
-
-  }
-}
-
-function checkForWin() {
-
-  if (arr[1][getClick()] == arr[0][getClick()]) {
-
-    display("correct!");
-
-    incClick();
-
-    if (getClick() == getLevel()) {
-      setTurner(false);
-      display("Level Up!");
-
-      if (getLevel() == 20) {
-        setTimeout(function() {
-
-          var playAgain;
-          playAgain = confirm("You Won Great Job! Want to play again?")
-          if (playAgain) {
-            resetCode();
-            on = true;
-            $("#player").html("The current level is: 1");
-          }
-
-        }, 600);
-      } else {
-
-        nextLevel();
-        setTimeout(function() {
-          display("Simon Says")
-          aiMove();
-          arr[1] = [];
-          setClick(0);
-
-        }, 2000);
-      }
+        this.initializeElements();
+        this.attachEventListeners();
+        
+        // Initialize high score after elements are available
+        this.highScore = parseInt(localStorage.getItem('simonHighScore')) || 0;
+        this.updateHighScoreDisplay();
     }
 
-  } else {
-    display("No try again");
-    PlaySound(fail);
-    setTurner(false);
-    if (sOn) {
-
-      display("starting over");
-      setTimeout(function() {
-        $("#player").html("The current level is: 1");
-        resetCode();
-      }, 2000);
-
-    } else {
-      setTimeout(function() {
-        display("Simon said")
-        aiMove();
-        arr[1] = [];
-        setClick(0);
-      }, 2000);
+    initializeElements() {
+        this.display = document.getElementById('display-text');
+        this.levelDisplay = document.getElementById('level');
+        this.scoreDisplay = document.getElementById('score');
+        this.highScoreDisplay = document.getElementById('high-score');
+        this.achievementElement = document.getElementById('achievement');
+        this.achievementText = document.getElementById('achievement-text');
+        this.buttons = document.querySelectorAll('.simon-button');
+        this.startButton = document.getElementById('start');
+        this.strictButton = document.getElementById('strict');
+        this.resetButton = document.getElementById('reset');
     }
-  }
-}
 
-function setTurner(bool) {
-  pTurn = bool;
-}
-
-function getTurn() {
-  return pTurn;
-}
-
-function display(string) {
-  $("#display").html(string);
-}
-
-function simonSays(bSpeed, bTimes, div) {
-
-  var color = buttons[div];
-
-  for (var i = 0; i < bTimes; i++) {
-    $("." + color).fadeOut(bSpeed).fadeIn(bSpeed);
-
-    if (color == "red") {
-      PlaySound(sound1);
-    } else if (color == "yellow") {
-      PlaySound(sound2);
-    } else if (color == "blue") {
-      PlaySound(sound3);
-    } else if (color == "green") {
-      PlaySound(sound4);
+    attachEventListeners() {
+        this.startButton.addEventListener('click', () => this.toggleGame());
+        this.strictButton.addEventListener('click', () => this.toggleStrictMode());
+        this.resetButton.addEventListener('click', () => this.resetGame());
+        
+        this.buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (this.state.isPlaying) {
+                    this.handlePlayerInput(button.dataset.color);
+                }
+            });
+        });
     }
-  }
-}
 
-function playPattern(count, delay) {
-  var next = 0;
-
-  (function step() {
-
-    if (count-- >= 1) {
-
-      simonSays(400, 1, arr[0][next++]);
-      setTimeout(step, delay);
+    toggleGame() {
+        this.state.isPlaying = !this.state.isPlaying;
+        this.startButton.textContent = this.state.isPlaying ? 'Stop' : 'Start';
+        this.startButton.classList.toggle('active', this.state.isPlaying);
+        
+        if (this.state.isPlaying) {
+            this.resetGame();
+        } else {
+            this.updateDisplay('Game Stopped');
+        }
     }
-  })();
-}
 
-function aiMove() {
-
-  setTurner(false);
-  playPattern(getLevel(), 1000);
-  var delay = getLevel() * 1000;
-  setTimeout(function() {
-    setTurner(true);
-
-    $("#player").html("The current level is: " + getLevel());
-  }, delay);
-
-}
-
-// public void main  // 
-for (var color in buttons) {
-
-  $("." + buttons[color]).click(function() {
-
-    if (on && getTurn()) {
-
-      blink(50, 1, $(this));
-      checkForWin();
-
+    toggleStrictMode() {
+        this.state.isStrict = !this.state.isStrict;
+        this.strictButton.textContent = `Strict Mode ${this.state.isStrict ? 'On' : 'Off'}`;
+        this.strictButton.classList.toggle('active', this.state.isStrict);
     }
-  });
+
+    resetGame() {
+        this.state = {
+            ...this.state,
+            level: 0,
+            score: 0,
+            sequence: [],
+            playerSequence: [],
+            currentStep: 0
+        };
+        this.generateSequence();
+        this.updateDisplay('Get Ready!');
+        this.updateLevel();
+        this.updateScore();
+        setTimeout(() => this.playSequence(), 1000);
+    }
+
+    generateSequence() {
+        const newColor = this.colors[Math.floor(Math.random() * this.colors.length)];
+        this.state.sequence.push(newColor);
+    }
+
+    async playSequence() {
+        this.state.isPlaying = false;
+        this.updateDisplay('Watch the sequence!');
+        
+        for (let color of this.state.sequence) {
+            await this.playColor(color);
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+        
+        this.state.isPlaying = true;
+        this.updateDisplay('Your turn!');
+    }
+
+    playColor(color) {
+        return new Promise(resolve => {
+            const button = document.querySelector(`.simon-button.${color}`);
+            
+            button.classList.add('active');
+            
+            this.playSound(color);
+            
+            setTimeout(() => {
+                button.classList.remove('active');
+                resolve();
+            }, 500);
+        });
+    }
+
+    handlePlayerInput(color) {
+        if (!this.state.isPlaying) return;
+        
+        this.state.playerSequence.push(color);
+        this.playColor(color);
+        
+        const currentIndex = this.state.playerSequence.length - 1;
+        const isCorrect = this.state.playerSequence[currentIndex] === this.state.sequence[currentIndex];
+        
+        if (!isCorrect) {
+            this.handleIncorrectInput();
+        } else if (this.state.playerSequence.length === this.state.sequence.length) {
+            this.handleCorrectSequence();
+        }
+    }
+
+    handleIncorrectInput() {
+        this.playSound('fail');
+        this.updateDisplay('Wrong! Try again!');
+        
+        if (this.state.isStrict) {
+            setTimeout(() => this.resetGame(), 1000);
+        } else {
+            setTimeout(() => this.playSequence(), 1000);
+        }
+    }
+
+    handleCorrectSequence() {
+        this.playSound('correct');
+        this.state.score += this.state.level;
+        this.state.level++;
+        this.state.playerSequence = [];
+        this.state.currentStep = 0;
+        
+        // Update high score
+        if (this.state.score > this.highScore) {
+            this.highScore = this.state.score;
+            localStorage.setItem('simonHighScore', this.highScore);
+            this.updateHighScoreDisplay();
+        }
+
+        this.updateDisplay('Correct! Level Up!');
+        this.updateLevel();
+        this.updateScore();
+        
+        // Add level completion animation
+        document.querySelector('.game-board').classList.add('level-complete');
+        setTimeout(() => {
+            document.querySelector('.game-board').classList.remove('level-complete');
+        }, 500);
+
+        this.checkAchievements();
+        
+        if (this.state.level > 20) {
+            this.handleWin();
+        } else {
+            setTimeout(() => {
+                this.generateSequence();
+                this.playSequence();
+            }, 1000);
+        }
+    }
+
+    handleWin() {
+        this.updateDisplay('Congratulations! You Won!');
+        this.state.isPlaying = false;
+        this.startButton.textContent = 'Start';
+        this.startButton.classList.remove('active');
+    }
+
+    playSound(color) {
+        const audio = new Audio(this.sounds[color]);
+        audio.play().catch(error => console.log('Audio playback failed:', error));
+    }
+
+    updateDisplay(text) {
+        this.display.textContent = text;
+    }
+
+    updateLevel() {
+        this.levelDisplay.textContent = this.state.level;
+    }
+
+    updateScore() {
+        this.scoreDisplay.textContent = this.state.score;
+    }
+
+    updateHighScoreDisplay() {
+        this.highScoreDisplay.textContent = this.highScore;
+    }
+
+    showAchievement(title, message) {
+        this.achievementText.textContent = message;
+        this.achievementElement.classList.add('show');
+        setTimeout(() => {
+            this.achievementElement.classList.remove('show');
+        }, 3000);
+    }
+
+    checkAchievements() {
+        if (this.state.level >= 10 && !this.achievements.level10) {
+            this.achievements.level10 = true;
+            this.showAchievement('Master of Memory', 'Completed 10 levels!');
+        }
+    }
 }
 
-$("#on").click(function() {
-  if (on == false) {
-    on = true;
-    $(this).html("On");
-    $("#light").removeClass("off").addClass("on");
-    display("Simon Says");
-    $("#player").html("The current level is: 1");
-    resetCode();
-  } else {
-    on = false;
-    $(this).html("Off");
-    display("Press on to play");
-    $("#light").removeClass("on").addClass("off");
-
-  }
-});
-
-$("#strict").click(function() {
-  if (sOn == false) {
-    sOn = true;
-    $(this).html("Strict mode On");
-
-  } else {
-    sOn = false;
-    $(this).html("Strict mode Off");
-
-  }
-});
-
-$("#reset").click(function() {
-  resetCode();
-  $("#display").html("Resting");
-  $("#player").html("The current level is: 1");
+// Initialize the game when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new SimonGame();
 });

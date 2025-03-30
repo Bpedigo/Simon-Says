@@ -1,136 +1,263 @@
-
-body{
-/*   background-image: url("http://lorempixel.com/400/300"); */
-/*   background-image: url("http://eskipaper.com/images/space-1.jpg"); */
-/*   background-image: url("http://cdn.wonderfulengineering.com/wp-content/uploads/2014/04/space-wallpaper-10.jpg"); */
-  background-repeat: no-repeat;
-  background-size: cover;
-  background: black;
-}
-.title{
-  max-width:640px;
-/*   background-color:black; */
-   background: radial-gradient(circle, white, black);
-  color:black;
-  margin:5px auto;
-  text-align:center;
-  border:2px solid black;
-  border-radius:25%;
+:root {
+    --green: #00ff00;
+    --red: #ff0000;
+    --yellow: #ffff00;
+    --blue: #0000ff;
+    --dark-green: #00cc00;
+    --dark-red: #cc0000;
+    --dark-yellow: #cccc00;
+    --dark-blue: #0000cc;
+    --background: #1a1a1a;
+    --text: #ffffff;
+    --display-bg: #000000;
 }
 
-.center{
-  position: relative;
-/*   background-color:black; */
-/*   background: radial-gradient(circle, gray, black); */
-  margin:20px auto;
-  width:520px;
-  height:570px;
-  border:2px solid black;
-  border-radius:50%;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.yellow{
-  position: absolute;
-/*   background:rgba(255, 255, 0, 0.77); */
-  top:0;
-  right:0;
-  height:250px;
-  width:250px;
-  border-top-right-radius: 100%;
-  border-bottom-left-radius:25%;
-}
-.red{
-  position: absolute;
-/*   background:rgba(255, 5, 9, 0.59); */
-  top:0;
-  left:0;
-  height:250px;
-  width:250px;
-  border-top-left-radius: 100%;
-  border-bottom-right-radius: 25%;
-  
-}
-.blue{
-  position: absolute;
-/*   background:rgba(0, 0, 255, 0.76); */
-  bottom:0;
-  left:0;
-  height:250px;
-  width:250px;
-  border-bottom-left-radius: 100%;
-  border-top-right-radius: 25%;
-}
-.green{
-  position: absolute;
-/*   background:rgba(17, 255, 5, 0.59); */
-  bottom:0;
-  right:0;
-  height:250px;
-  width:250px;
-  border-bottom-right-radius: 100%;
-  border-top-left-radius:25%;
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.control-pannel{
-  position: absolute;
-  top: 45%;
-  left:20px;
-  height: 60px;
-  width: 340px;
+.game-container {
+    max-width: 600px;
+    width: 90%;
+    padding: 2rem;
 }
 
-.on {
-  border: 3px solid black;
-  background:red;
-  display: inline-block;
-  border-radius: 100%;
-  height:20px;
-  width:20px;
+header {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.off{
-  border: 3px solid black;
-  background:black;
-  display: inline-block;
-  border-radius: 100%;
-  height:20px;
-  width:20px;
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text);
 }
 
-.display-screen{
-  position: absolute;
-  background:black;
-  color:white;
-  text-align: center;
-  width:100px;
-  height:100px;
-  left: 270px;
-  bottom:-4px;
-  border-radius:25%;
-  border:2px solid gray;
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
 
-.push-down{
-  margin-top:10px;
+.game-board {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: #000;
+    border-radius: 50%;
+    padding: 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
-
-.glyphicon-flash{
-  font-size:200px;
-  color:yellow;
+.simon-buttons {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
 }
 
-.glyphicon-leaf{
-  font-size:200px;
-  color:green;
+.simon-button {
+    position: absolute;
+    width: 45%;
+    height: 45%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 1;
+    transform-origin: center;
 }
 
-.glyphicon-fire{
-  font-size:200px;
-  color:red;
+.simon-button:active {
+    opacity: 0.7;
+    transform: scale(0.98);
 }
 
-.glyphicon-cloud{
-  font-size:200px;
-  color:blue;
+.simon-button.active {
+    filter: brightness(1.5) saturate(1.5);
+    box-shadow: 0 0 30px currentColor;
+    animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Add subtle idle animation */
+.simon-button:not(.active):hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px currentColor;
+}
+
+.green {
+    background-color: var(--green);
+    top: 4%;
+    right: 4%;
+    border-radius: 0 100% 0 0;
+    color: var(--green);
+}
+
+.red {
+    background-color: var(--red);
+    top: 4%;
+    left: 4%;
+    border-radius: 100% 0 0 0;
+    color: var(--red);
+}
+
+.yellow {
+    background-color: var(--yellow);
+    bottom: 4%;
+    right: 4%;
+    border-radius: 0 0 100% 0;
+    color: var(--yellow);
+}
+
+.blue {
+    background-color: var(--blue);
+    bottom: 4%;
+    left: 4%;
+    border-radius: 0 0 0 100%;
+    color: var(--blue);
+}
+
+.controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--display-bg);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    width: 60%;
+}
+
+.display {
+    background: var(--display-bg);
+    color: var(--text);
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.control-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background: #333;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.control-button:hover {
+    background: #444;
+}
+
+.control-button.active {
+    background: #666;
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .game-info {
+        font-size: 1rem;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .control-button {
+        width: 100%;
+    }
+}
+
+/* Add achievement notification */
+.achievement {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+.achievement.show {
+    transform: translateX(0);
+}
+
+.achievement h3 {
+    margin: 0;
+    color: #ffd700;
+}
+
+.achievement p {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+}
+
+/* High score display */
+.high-score {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    z-index: 1000;
+}
+
+.high-score span {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+/* Level completion animation */
+@keyframes levelComplete {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.level-complete {
+    animation: levelComplete 0.5s ease;
 }

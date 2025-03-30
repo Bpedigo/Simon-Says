@@ -1,63 +1,49 @@
 <!DOCTYPE html>
-<html >
-
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>Simple Simon Says</title>    
-    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
-    <link rel="stylesheet" href="css/style.css">   
-  </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simon Says Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Simon Says</h1>
+            <div class="game-info">
+                <div class="level-display">Level: <span id="level">0</span></div>
+                <div class="score-display">Score: <span id="score">0</span></div>
+            </div>
+        </header>
 
-  <body>
+        <div class="high-score">High Score: <span id="high-score">0</span></div>
 
-    
+        <main class="game-board">
+            <div class="simon-buttons">
+                <button class="simon-button green" data-color="green"></button>
+                <button class="simon-button red" data-color="red"></button>
+                <button class="simon-button yellow" data-color="yellow"></button>
+                <button class="simon-button blue" data-color="blue"></button>
+            </div>
 
-<div class="title">
-  <h1 lead>Simple Simon Says</h1>
-  
-  <h4 id="simon">pattern matching game!</h4>
-  <h4 id="player">The current level is: 0</h4>
-  
-</div>
-
-
-<div class="center">
-  
-  <div class="control-pannel ">
-    <button class="btn btn-danger" id="on">Off</button>
-      <div class="off" id="light">
-      </div>
-    <button class="btn btn-warning" id="strict" >Strict Mode Off</button>
-    <button class="btn btn-success " id="reset">Reset</button>
-    <div class="display-screen">
-        <p class="push-down lead" id="display">Turn on to play</p>
+            <div class="controls">
+                <div class="display">
+                    <div id="display-text">Press Start to Play</div>
+                </div>
+                <div class="buttons">
+                    <button id="start" class="control-button">Start</button>
+                    <button id="strict" class="control-button">Strict Mode</button>
+                    <button id="reset" class="control-button">Reset</button>
+                </div>
+            </div>
+        </main>
     </div>
-   
-  </div>
-   
-  <div class="red" >
-    <span class="glyphicon glyphicon-fire"></span>
-  </div>
-  
-  <div class="yellow">
-    <span class="glyphicon glyphicon-flash"></span>
-  </div>
-  
-  <div class="blue">
-    <span class="glyphicon glyphicon-cloud"></span>
-  </div>
-  
-  <div class="green">
-    <span class="glyphicon glyphicon-leaf"></span>
-  </div>
-      
-</div>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+
+    <div class="achievement" id="achievement">
+        <h3>Achievement Unlocked!</h3>
+        <p id="achievement-text"></p>
+    </div>
 
     <script src="js/index.js"></script>
-
-    
-    
-    
-  </body>
+</body>
 </html>
